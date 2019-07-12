@@ -18,20 +18,27 @@
                       <!-- <el-button>Cancel</el-button> -->
                  </el-form-item>
       </el-row>
-
     </el-form>
+
+<p v-if="errors.length">
+    <b>Please correct the following error(s):</b>
+    <ul>
+      <li v-for="error in errors">{{ error }}</li>
+    </ul>
+</p>
 
     <div>
             <p>
               ホームに戻る↓
             </p>
             <router-link to="/Myjobs">HOME</router-link>
-          </div>
+    </div>
 
-      </div>
+</div>
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
   name: 'mypage',
@@ -43,9 +50,43 @@ export default {
           lowrate: '',
           highrate: '',
           enddate: '',
+          message: '空です',
+          errors: []
         };
       },
+       methods: {
+          onSubmit: function () {
+          this.checkForm();
+          this.open();
+          axios.get('http://localhost:8080/workingMoney',{
+                        params: {
+                          yen: this.yen,
+                          time: this.time,
+                          inputNormalTime: this.inputNormalTime,
+                          inputOverTime: this.inputOverTime
+                          }
+                        })
+          },
+          checkForm: function (e) {
+                this.errors = [];
+
+                if (!this.name || !this.id　|| !this.mailaddress || !this.lowrate || !this.highrate || !this.enddate) {
+                  this.errors.push("フォームの値を正しく入力して下さい.");
+                }
+
+                if (!this.errors.length) {
+                  return true;
+                }
+
+                e.preventDefault();
+          },
+          open() {
+                this.$message('登録が完了しました.');
+          }
+       }
+
 }
+
 </script>
 
 <style>

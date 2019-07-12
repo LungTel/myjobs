@@ -33,7 +33,7 @@
     <ul>
       <li v-for="error in errors">{{ error }}</li>
     </ul>
-  </p>
+</p>
 
     <div>
         <p>
